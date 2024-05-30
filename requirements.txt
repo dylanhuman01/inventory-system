@@ -1,0 +1,6 @@
+Flask
+SQLAlchemy
+pyzbar
+opencv-python
+requests
+

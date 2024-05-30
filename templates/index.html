@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory System</title>
+</head>
+<body>
+    <h1>Inventory System</h1>
+    <form id="scan-form">
+        <label>Scan Barcode:</label><br>
+        <input type="text" id="barcode-input"><br>
+        <button type="submit">Scan</button>
+    </form>
+    <div id="item-info"></div>
+
+    <script>
+        document.getElementById('scan-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const barcode = document.getElementById('barcode-input').value;
+            fetch('/scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `barcode=${barcode}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('item-info').innerText = data.error;
+                } else {
+                    document.getElementById('item-info').innerHTML = `
+                        <p>Name: ${data.name}</p>
+                        <p>Description: ${data.description}</p>
+                        <p>Category: ${data.category}</p>
+                        <p>Serial Number: ${data.serial_number}</p>
+                        <p>Purchase Date: ${data.purchase_date}</p>
+                        <p>Warranty Expiry: ${data.warranty_expiry}</p>
+                        <p>Location: ${data.location}</p>
+                        <p>Status: ${data.status}</p>
+                    `;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
+
